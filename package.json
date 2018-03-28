@@ -1,6 +1,17 @@
 {
     "name": "event-repeater",
-    "version": "0.0.1",
+    "version": "0.0.2",
+    "keywords": [
+        "cron",
+        "calendar"
+    ],
+    "bugs": "https://github.com/nytr0gen/event-repeater/issues",
+    "license": "MIT",
+    "main": "index.js",
+    "repository": "nytr0gen/event-repeater",
+    "engines": {
+        "node": ">=4.0.0"
+    },
     "scripts": {
         "test": "./node_modules/mocha/bin/mocha tests.js"
     },
