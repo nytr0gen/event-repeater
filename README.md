@@ -22,3 +22,13 @@ ev.next(10); // list of the next 10 events
 ev.isValid(new Date('2018-03-28T20:00:00.000Z')); // true
 ev.isValid(new Date('2018-03-28T22:00:00.000Z')); // false
 ```
+
+# Webpack
+Using it in **Frontend** with **Webpack**? No problemo. Just merge this into your `webpack.config.js`
+```javascript
+{
+    node: {
+        net: 'mock'
+    }
+}
+```
