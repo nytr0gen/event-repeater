@@ -25,7 +25,7 @@ const OPTS_SCHEMA = Joi.object().keys({
         .min(Joi.ref('startDate')),
     repeatFrequency: Joi.number().optional()
         .greater(0)
-        .default(1),
+        .default(null),
     repeatInterval: Joi.string().optional()
         .only('day', 'week', 'month', 'year')
         .default('day'),
@@ -50,8 +50,13 @@ class EventRepeater {
         this.end = moment(this.opts.endDate);
         this.range = this.end.unix() - this.start.unix();
 
-        this.addInput = this.opts.repeatFrequency;
-        this.addValue = this.opts.repeatInterval;
+        if (this.opts.repeatFrequency !== null) {
+            this.addInput = this.opts.repeatFrequency;
+            this.addValue = this.opts.repeatInterval;
+            this.repeat = true;
+        } else {
+            this.repeat = false;
+        }
 
         this.endsAt = null;
         if (typeof(this.opts.ends) === 'number') {
@@ -62,6 +67,10 @@ class EventRepeater {
     }
 
     incrementDate(date, multiplier = 1) {
+        if (!this.repeat) {
+            return moment(date);
+        }
+
         return moment(date).add(multiplier * this.addInput, this.addValue);
     }
 
@@ -70,6 +79,10 @@ class EventRepeater {
     }
 
     next(n) {
+        if (!this.repeat) {
+            n = 1;
+        }
+
         const items = [];
         for (let i = 0; i < n; i++) {
             const start = this.incrementDate(this.start, i);
@@ -90,6 +103,9 @@ class EventRepeater {
         }
         if (this.isExpired(date)) {
             return false;
+        }
+        if (!this.repeat) {
+            return this.start.isSameOrBefore(date) && date.isSameOrBefore(this.end);
         }
 
         // binary search
