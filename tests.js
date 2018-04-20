@@ -71,6 +71,32 @@ describe('EventRepeater', function() {
                 assert(!ev3.isValid(d));
             }
         });
+
+        it('should fail on future event', function () {
+            const evt = new EventRepeater({
+                startDate: new Date(now + 10000),
+                endDate: new Date(now + 20000),
+                repeatFrequency: 1,
+                repeatInterval: 'day',
+                ends: 3,
+            });
+
+            assert(!evt.isValid(new Date(now)));
+            assert(!evt.isValid(new Date(now + 10000 - 1)));
+            assert(evt.isValid(new Date(now + 10000)));
+        });
+
+        it('should fail on specific future event', function () {
+            const evt = new EventRepeater({
+                startDate: new Date('2018-04-23T09:00:00.000Z'),
+                endDate: new Date('2018-04-25T11:05:00.000Z'),
+                repeatFrequency: 1,
+                repeatInterval: 'day',
+                ends: 3
+            });
+
+            assert(!evt.isValid(new Date('2018-04-20T15:40:25.427')));
+        });
     });
 
     describe('#next()', function() {

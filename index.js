@@ -101,7 +101,7 @@ class EventRepeater {
         if (!moment.isMoment(date)) {
             date = moment(date);
         }
-        if (this.isExpired(date)) {
+        if (date.isBefore(this.start) || this.isExpired(date)) {
             return false;
         }
         if (!this.repeat) {
